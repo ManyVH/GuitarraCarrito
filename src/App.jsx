@@ -5,18 +5,35 @@ import { useState } from 'react'
 import { db } from './db/db';
 function App() {
   const [data, setData] = useState(db)
-  
+  const [carrito, setCarrito] = useState([])
+
+  function addCart(item) {
+      const itemExists = carrito.findIndex(guitarra => guitarra.id ===item.id)
+      if(itemExists >=0){
+        const updateCarrito = [...carrito]
+        updateCarrito[itemExists].cantidad++
+        setCarrito(updateCarrito)
+      }else{
+        item.cantidad = 1
+        setCarrito([...carrito, item])
+      }
+  }
+
 
   return (
     <>
-      <Header />
+      <Header
+       carrito={carrito}
+       />
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
 
         <div className="row mt-5">
-          {data.map(() =>(
+          {data.map((guitarra) =>(
             <Product 
-              price={100}
+              key={guitarra.id}
+              guitarra={guitarra}
+              agregarCarrito={addCart}
             />
           ))}
           
