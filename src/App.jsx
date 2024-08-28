@@ -19,11 +19,35 @@ function App() {
       }
   }
 
+  function removeProductCart(id) {
+    
+    setCarrito(prevCarrito => prevCarrito.filter(guitarra => guitarra.id !== id))
+  }
 
+  function modifyProductCart(id, operation) {
+    const updateCarrito = [...carrito]
+    const itemIndex = carrito.findIndex(guitarra => guitarra.id ===id)
+    
+    if (operation) {
+      updateCarrito[itemIndex].cantidad++
+      setCarrito(updateCarrito)
+    } else {
+      updateCarrito[itemIndex].cantidad--
+      if (updateCarrito[itemIndex].cantidad===0) {
+        removeProductCart(id)
+      }else{
+        setCarrito(updateCarrito)
+      }
+
+    }
+    
+  }
   return (
     <>
       <Header
        carrito={carrito}
+       removeProductCart={removeProductCart}
+       modifyProductCart={modifyProductCart}
        />
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
@@ -34,6 +58,7 @@ function App() {
               key={guitarra.id}
               guitarra={guitarra}
               agregarCarrito={addCart}
+              
             />
           ))}
           

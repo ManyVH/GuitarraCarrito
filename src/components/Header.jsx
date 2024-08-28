@@ -1,9 +1,9 @@
 import {useMemo} from 'react'
 
-export default function Header({ carrito }) {
+export default function Header({ carrito, removeProductCart, modifyProductCart}) {
 //State Derivado
-const isEmpty = ()=> carrito.length === 0 
-const carritoTotal = ()=> carrito.reduce( (total, item) => total + (item.cantidad * item.price), 0)
+const isEmpty = useMemo( () => carrito.length === 0, [carrito]) 
+const carritoTotal = useMemo(()=> carrito.reduce( (total, item) => total + (item.cantidad * item.price), 0), [carrito])
   return (
     <>
       <header className="py-5 header">
@@ -28,7 +28,7 @@ const carritoTotal = ()=> carrito.reduce( (total, item) => total + (item.cantida
                 />
 
                 <div id="carrito" className="bg-white p-3">
-                  {isEmpty()? (
+                  {isEmpty? (
                     <p className="text-center">El carrito esta vacio</p>
                   ) : (
                     <>
@@ -55,16 +55,28 @@ const carritoTotal = ()=> carrito.reduce( (total, item) => total + (item.cantida
                             <td>{guitarra.name}</td>
                             <td className="fw-bold">{guitarra.price}</td>
                             <td className="flex align-items-start gap-4">
-                              <button type="button" className="btn btn-dark">
+                              <button 
+                              type="button" 
+                              className="btn btn-dark"
+                              onClick={() => modifyProductCart(guitarra.id, false)}
+                              >
                                 -
                               </button>
                               {guitarra.cantidad}
-                              <button type="button" className="btn btn-dark">
+                              <button 
+                              type="button" 
+                              className="btn btn-dark"
+                              onClick={() => modifyProductCart(guitarra.id, true)}
+                              >
                                 +
                               </button>
                             </td>
                             <td>
-                              <button className="btn btn-danger" type="button">
+                              <button 
+                              className="btn btn-danger" 
+                              type="button"
+                              onClick={()=> removeProductCart(guitarra.id)}
+                              >
                                 X
                               </button>
                             </td>
@@ -73,7 +85,7 @@ const carritoTotal = ()=> carrito.reduce( (total, item) => total + (item.cantida
                       </tbody>
                     </table>
                     <p className="text-end">
-                    Total pagar: <span className="fw-bold">{carritoTotal()}</span>
+                    Total pagar: <span className="fw-bold">{carritoTotal}</span>
                   </p>
                     </>
                   )}
